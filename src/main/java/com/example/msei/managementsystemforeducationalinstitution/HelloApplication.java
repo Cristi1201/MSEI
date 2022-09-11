@@ -1,23 +1,40 @@
 package com.example.msei.managementsystemforeducationalinstitution;
 
+import DB_Connection.ConnectionBD;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class HelloApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) {
+        try {
+            AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getClassLoader().getResource("app.fxml"));
+            Scene scene = new Scene(root, 860, 560);
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.setTitle("IPLT Ion Luca Caragiale");
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
-        launch();
+
+        Connection c = ConnectionBD.getConnection();
+        try {
+            if (c != null) {
+                launch(args); //start app
+                c.close(); //close connection to db
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception : " + e.getMessage());
+        }
     }
 }
